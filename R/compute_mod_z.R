@@ -6,7 +6,11 @@
 compute_mod_z <- function(df) {
   df %>%
     mutate(across(where(is.numeric),
-                  ~ (0.6745 * (. - median(., na.rm = TRUE)) / modified_z(.)),
+                  ~ (0.6745 * (. - median(., na.rm = TRUE)) / compute_mad(.)),
                   .names = "modified_z_{.col}")) %>%
     ungroup()
+}
+
+compute_mad <- function(x) {
+  mad(x, constant = 1, na.rm = TRUE)
 }

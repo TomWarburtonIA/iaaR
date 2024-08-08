@@ -4,25 +4,25 @@
 \alias{z_filter}
 \title{Replace values with NA based on Modified Z-Scores}
 \usage{
-z_filter(
-  df,
-  z_threshold_upper = 3.5,
-  z_threshold_lower = -3.5,
-  replace_zeros = TRUE
-)
+z_filter(df, z_upper = 3.5, z_lower = -3.5, replace_zeros = TRUE)
 }
 \arguments{
 \item{df}{A data frame with numeric columns.}
 
-\item{replace_zeros}{Logical indicating whether to replace zeros with NA. Default is TRUE.}
-
 \item{z_upper}{Numeric value for upper threshold. Default is 3.5.}
 
 \item{z_lower}{Numeric value for lower threshold. Default is -3.5.}
+
+\item{replace_zeros}{Logical indicating whether to replace zeros with NA. Default is TRUE.}
 }
 \value{
 A data frame with values replaced based on thresholds.
 }
 \description{
-Replace values with NA based on Modified Z-Scores
+Be careful doing this - make sure you are being ethical with your data, and
+only filter with this function if you have genuinely large outliers that are
+skewing your data. Remember you can typically squash data together nicely in
+a way that allows you to do more robust stats if you transform by logarithm.
+Don't filter just because you want 'good' p-values. This isn't ethical and
+can have disastrous consequences.
 }
