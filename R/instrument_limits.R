@@ -1,29 +1,48 @@
-#' Calculate the limits of detection (LOD) or quantification/quantitation (LOQ). This will only work with a data frame with VOC names as col heads, and each sample as a separate row. Limits calculated through dividing the linearity residuals of a calibration curve against the slope of the regression. Values within the data frame should be GC peak response (eg. peak area)
+#' Calculate the limits of detection (LOD) or quantification/quantitation (LOQ).
 #'
-#' @param df A data frame with numeric columns
-#' @param limit_method "detection", "quant" or "both". Calculates either LOD, LOQ or does both. Must be specified.
-#' @param concs Creates a value of the concentrations used in the calibration curve. Must be specified if 'concs_in_df' is FALSE.
-#' @param concs_in_df Logical to return a TRUE or FALSE for whether the concentrations are included in df. FALSE by default.
-#' @param zero_remove Logical to change any 0 into an NA in df. TRUE by default.
-#' @param concs_col_position State the position of the concentration column in df. Must be either "first" or "last" if 'concs_in_df' is TRUE. "none" if 'concs_in_df" is FALSE. "none" by default.
-#' @return A data frame with the LOD/LOQ calculated for each column in df
+#' This function calculates the LOD or LOQ for each VOC (volatile organic compound)
+#' using the peak area as input data. Limits are calculated by dividing the linearity
+#' residuals of a calibration curve against the slope of the regression.
+#'
+#' @param df A data frame with numeric columns representing peak areas.
+#' @param limit_method Character string specifying the type of limit to calculate:
+#'        "detection", "quant" or "both".
+#' @param concs Optional vector of concentrations used in the calibration curve.
+#'        Must be provided if 'concs_in_df' is FALSE.
+#' @param concs_in_df Logical indicating whether concentrations are included in df.
+#' @param concs_col_position Position of the concentration column in df if 'concs_in_df'
+#'        is TRUE. Must be either "first", "last", or "none".
+#' @param df_concs Optional data frame with concentrations corresponding to each species
+#'        in df. Must be of equal size to df.
+#' @param zero_remove Logical indicating whether to replace zeros with NA in df.
+#' @return A data frame with the LOD/LOQ calculated for each column in df.
 #' @export
-instrument_limits <- function(df, limit_method, concs = NULL, concs_in_df = FALSE, concs_units = NULL, zero_remove = TRUE, conc_col_position = "none") {
+instrument_limits <- function(df,
+                              limit_method,
+                              concs = NULL,
+                              concs_in_df = FALSE,
+                              zero_remove = TRUE,
+                              conc_col_position = "none",
+                              df_concs = NULL)
+  {
 
   # Validate inputs
   if (!limit_method %in% c("detection", "quant", "both")) {
     stop("Invalid value for 'limit_method'. Must be 'detection', 'quant', or 'both'.")
   }
-  if (is.null(concs) && !concs_in_df) {
+  if (is.null(concs) && !concs_in_df && is.null(df_concs)) {
+    stop("No concentrations provided. Please provide 'concs', 'concs_in_df', or 'df_concs'.")
+  }
+  if (is.null(concs) && !concs_in_df && is.null(df_concs)) {
     stop("If 'concs_in_df' is FALSE, 'concs' must be specified.")
   }
 
-  # Remove zeros
+  # Remove zeros if specified
   if (zero_remove) {
     df[df == 0] <- NA
   }
 
-  # Handle concentration column
+  # Handle concentration column if included in df
   if (concs_in_df) {
     if (conc_col_position == "first") {
       concs <- df[, 1]
@@ -32,14 +51,39 @@ instrument_limits <- function(df, limit_method, concs = NULL, concs_in_df = FALS
       concs <- df[, ncol(df)]
       df <- df[, -ncol(df)]
     } else {
-      stop("Invalid value for 'concs_col_position'. Must be 'first' or 'last'.")
+      stop("Invalid value for 'concs_col_position'. Must be 'first', 'last', or 'none'.")
     }
   }
 
-  # If concentrations are not in the data frame, ensure they are provided
-  if (!concs_in_df) {
-    if (is.null(concs)) {
-      stop("Concentrations must be provided if 'concs_in_df' is FALSE.")
+  # If df_concs is provided, ensure column names match and filter as needed
+  if (!is.null(df_concs)) {
+
+    # Check if df_concs has only one column
+    if (ncol(df_concs) == 1) {
+      message("df_concs has only one column, assuming this is a column of concentrations.")
+      proceed <- readline(prompt = "Do you want to apply these concentrations to all species in df? (Y/N): ")
+
+      if (toupper(proceed) == "Y") {
+        # Replicate the single column across all columns of df
+        df_concs <- as.data.frame(matrix(rep(df_concs[, 1], ncol(df)), nrow = nrow(df), ncol = ncol(df)))
+        colnames(df_concs) <- colnames(df)
+      } else {
+        stop("Operation aborted by user.")
+      }
+    }
+
+    # Ensure column names match and filter as needed
+    common_cols <- intersect(colnames(df), colnames(df_concs))
+    if (!setequal(colnames(df), colnames(df_concs))) {
+      message("Uncommon columns have been found and will be discarded.")
+      proceed <- readline(prompt = "Do you want to continue with the common columns only? (Y/N): ")
+      if (toupper(proceed) != "Y") {
+        stop("Cannot proceed with unmatched columns, operation will not execute.")
+      }
+      df <- df[, common_cols, drop = FALSE]
+      df_concs <- df_concs[, common_cols, drop = FALSE]
+    } else {
+      message("All columns match in df and df_concs. Proceeding with the original data frames.")
     }
   }
 
@@ -49,6 +93,11 @@ instrument_limits <- function(df, limit_method, concs = NULL, concs_in_df = FALS
   # Loop over each column (VOC)
   for (i in seq_along(df)) {
     values <- df[, i]
+
+    # Use the corresponding column for concentrations if df_concs is provided
+    if (!is.null(df_concs)) {
+      concs <- df_concs[, i]
+    }
 
     # Fit the linear model
     model <- lm(values ~ concs)
