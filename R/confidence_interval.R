@@ -23,7 +23,7 @@
 #' )
 #' df_ci <- df_long %>%
 #'   group_by(variable) %>%
-#'   reframe(confidence_intervals(value, method = "regular", conf.interval = "0.95"))
+#'   reframe(confidence_intervals(value, method = "regular", conf.level = 0.95))
 #' @import boot
 #' @import dplyr
 #' @export
