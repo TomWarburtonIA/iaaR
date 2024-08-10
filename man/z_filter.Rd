@@ -2,31 +2,18 @@
 % Please edit documentation in R/z_filter.R
 \name{z_filter}
 \alias{z_filter}
-\title{Replace values with NA based on Modified Z-Scores. For use after running \strong{calculate_mod_z}, also from the iaaR package}
+\title{Replace values with NA based on Modified Z-Scores}
 \usage{
-<<<<<<< HEAD
 z_filter(df, z_upper = 3.5, z_lower = -3.5, return_tidy = TRUE)
 }
 \arguments{
-\item{df}{A data frame with either the original values and modified Z-scores within, or the original values without modified Z-scores.}
-=======
-z_filter(df, z_upper = 3.5, z_lower = -3.5, replace_zeros = TRUE)
-}
-\arguments{
 \item{df}{A data frame with numeric columns.}
->>>>>>> ad57f3afef4e6336eafdd7c964c897f0b5b2e359
 
 \item{z_upper}{Numeric value for upper threshold. Default is 3.5.}
 
 \item{z_lower}{Numeric value for lower threshold. Default is -3.5.}
 
-<<<<<<< HEAD
 \item{return_tidy}{Logical indicating whether to remove modified Z-score columns from the returned data frame. Default is TRUE.}
-
-\item{df_z}{A data frame with modified Z-scores corresponding to the values in 'df'. Must have the same column names as 'df'. Default is NULL (use a data frame with both values and modified Z-scores as 'df' for the easiest option).}
-=======
-\item{replace_zeros}{Logical indicating whether to replace zeros with NA. Default is TRUE.}
->>>>>>> ad57f3afef4e6336eafdd7c964c897f0b5b2e359
 }
 \value{
 A data frame with values replaced based on thresholds, optionally excluding modified Z-score columns.
@@ -36,16 +23,6 @@ Be careful doing this - make sure you are being ethical with your data, and
 only filter with this function if you have genuinely large outliers that are
 skewing your data. Remember you can typically squash data together nicely in
 a way that allows you to do more robust stats if you transform by logarithm.
-<<<<<<< HEAD
 Don't filter just because you want 'good' p-values as this isn't ethical
 and can have disastrous consequences.
-}
-\details{
-If you have separate data frames for the original values and the corresponding
-modified Z-scores, make sure they are using the same column heads, as if not the
-code will not work.
-=======
-Don't filter just because you want 'good' p-values. This isn't ethical and
-can have disastrous consequences.
->>>>>>> ad57f3afef4e6336eafdd7c964c897f0b5b2e359
 }
