@@ -21,10 +21,13 @@
 #' @return A data frame containing the number of samples, standard deviation, standard error, mean,
 #'         and the lower and upper bounds of the confidence interval.
 #' @examples
+#' library(iaaR)
+#'
 #' data <- c(5.1, 4.9, 5.0, 5.1, 5.2)
 #' confidence_interval(data, method = "regular")
 #' confidence_interval(data, method = "bootstrapped", bootstrap_samples = 1000)
 #' @examples
+#' library(iaaR)
 #' library(dplyr)
 #'
 #' df_long <- data.frame(
