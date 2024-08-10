@@ -70,3 +70,4 @@ confidence_interval <- function(data, conf.level = 0.95, method = "regular", boo
 
   return(result)
 }
+
