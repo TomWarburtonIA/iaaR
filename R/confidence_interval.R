@@ -25,6 +25,8 @@
 #' confidence_interval(data, method = "regular")
 #' confidence_interval(data, method = "bootstrapped", bootstrap_samples = 1000)
 #' @examples
+#' library(dplyr)
+#'
 #' df_long <- data.frame(
 #' variable = rep(c("A", "B"), each = 10),
 #' value = c(rnorm(10, mean = 5), rnorm(10, mean = 6))
