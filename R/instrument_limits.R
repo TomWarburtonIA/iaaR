@@ -2,7 +2,10 @@
 #'
 #' This function calculates the LOD or LOQ for each VOC (volatile organic compound)
 #' using the peak area as input data. Limits are calculated by dividing the linearity
-#' residuals of a calibration curve against the slope of the regression.
+#' residuals of a calibration curve against the slope of the regression. Regression
+#' Pearson's R. Doesn't allow for Spearman's Rho / Kendall's Tau (these  methods
+#' are more for either non-parametric regressions or those with outliers, and if your
+#' calibrationcurve contains outliers, it probably needs to be repeated).
 #'
 #' @param df A data frame with numeric columns representing peak areas.
 #' @param limit_method Character string specifying the type of limit to calculate:
