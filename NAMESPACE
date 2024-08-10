@@ -2,5 +2,8 @@
 
 export(calculate_mod_z)
 export(compute_mad)
+export(confidence_interval)
 export(instrument_limits)
 export(z_filter)
+import(boot)
+import(dplyr)

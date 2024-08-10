@@ -2,10 +2,10 @@
 % Please edit documentation in R/zzz.R
 \name{.onAttach}
 \alias{.onAttach}
-\title{Ensure tidyverse is installed and attached}
+\title{Ensure tidyverse is installed and optionally attached}
 \usage{
 .onAttach(libname, pkgname)
 }
 \description{
-Ensure tidyverse is installed and attached
+Ensure tidyverse is installed and optionally attached
 }
