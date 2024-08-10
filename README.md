@@ -8,6 +8,6 @@ This package is just a grouping of different functions that generally littered m
 ## Installation
 You can install the development version of this package from GitHub using the `devtools` package:
 
-# Development version
+### Development version
 install.packages("remotes")
 remotes::install_github("TomWarburtonIA/iaaR")
