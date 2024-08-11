@@ -46,6 +46,7 @@ library(iaaR)
 data <- c(5.1, 4.9, 5.0, 5.1, 5.2)
 confidence_interval(data, method = "regular")
 confidence_interval(data, method = "bootstrapped", bootstrap_samples = 1000)
+
 library(iaaR)
 library(dplyr)
 
@@ -56,4 +57,5 @@ value = c(rnorm(10, mean = 5), rnorm(10, mean = 6))
 df_ci <- df_long \%>\%
   group_by(variable) \%>\%
   reframe(confidence_intervals(value, method = "regular", conf_level = 0.95))
+  
 }

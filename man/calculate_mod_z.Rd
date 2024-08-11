@@ -27,5 +27,10 @@ Options are "add_columns" to add modified Z-scores as new columns at the end of 
 A data frame with modified Z-scores added to the original data frame or a separate data frame with only the modified Z-scores.
 }
 \description{
-Compute Modified Z-Scores for numeric columns and add them as new columns or return them separately.
+Modified Z-scores are calculated using the Median Absolute Deviation (MAD), insodoing
+attempting to account for non-parametric distributions within data. Please exercise
+caution for use in multi-modal data (data with several areas of higher densities),
+as these areas of densities can skew modified Z-scores. Multi-modal data can first
+be transformed using kernel density estimation (KDE) to apply smoothing before
+calculating modified Z-scores.
 }
