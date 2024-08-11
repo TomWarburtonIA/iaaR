@@ -11,7 +11,7 @@
 #' @param data_format Format of the data: "wide" for a single column of intensity values,
 #' or "long" for separate columns for retention time and intensity. Default is "long".
 #' 
-#' @return A chromatogram in the specified format.
+#' @return A dataframe of rentention time and peak intensity in the specified format.
 #' 
 #' @export
 #' 

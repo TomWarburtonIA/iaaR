@@ -19,7 +19,7 @@ read_ch(
 or "long" for separate columns for retention time and intensity. Default is "long".}
 }
 \value{
-A chromatogram in the specified format.
+A dataframe of rentention time and peak intensity in the specified format.
 }
 \description{
 This function reads Agilent \code{.ch} files and extracts chromatogram data
