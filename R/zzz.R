@@ -21,14 +21,16 @@
             tryCatch({
               library(tidyverse)
               message("The 'tidyverse' package has been attached successfully.")
-            }, error = function(e) {
+            }, 
+            error = function(e) {
               message("Error loading 'tidyverse': ", e$message)
               message("Please install 'tidyverse' manually to use this package.")
             })
           } else {
             message("The 'tidyverse' package has not been attached. Some functionalities may not be available.")
           }
-        }, error = function(e) {
+        }, 
+        error = function(e) {
           message("Error installing 'tidyverse': ", e$message)
           message("Please install 'tidyverse' manually to use this package.")
         })
@@ -44,7 +46,8 @@
         tryCatch({
           library(tidyverse)
           message("The 'tidyverse' package has been attached successfully.")
-        }, error = function(e) {
+        }, 
+        error = function(e) {
           message("Error loading 'tidyverse': ", e$message)
           message("Ensure that 'tidyverse' is installed correctly.")
         })
