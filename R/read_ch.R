@@ -6,16 +6,12 @@
 #'
 #' @param path Path to the \code{.ch} file.
 #' 
-#' @param format_out Format of the output data: either "matrix" or "data.frame".
+#' @param format_out Format of the output data: either "matrix" or "data.frame". Default is "data.frame".
 #' 
 #' @param data_format Format of the data: "wide" for a single column of intensity values,
-#' or "long" for separate columns for retention time and intensity.
+#' or "long" for separate columns for retention time and intensity. Default is "long".
 #' 
-#' @param read_metadata Logical indicating whether to attach metadata to the output.
-#' 
-#' @param metadata_format Format for metadata output: either "chromconverter" or "raw".
-#' 
-#' @return A chromatogram in the specified format with optional metadata.
+#' @return A chromatogram in the specified format.
 #' 
 #' @export
 #' 
@@ -23,22 +19,29 @@
 #' Please visit github.com/ethanbass/chromConverter to see the original script, 
 #' plus many more functions for reading chromatography files into R. I (TW) only
 #' adapted the code, and take no credit whatsoever for it. Please see the reference 
-#' below for Ethan's original code, called by \code(read_chemstation_ch), plus many more 
-#' functions for reading chromatograms into R.
+#' below for Ethan's original code, called by \code{read_chemstation_ch}, plus many more 
+#' functions for reading chromatograms into R in. This version of \code{read_chemstation_ch}
+#' exists solely to read .ch files into a format with retention time and intensity values.
 #' 
 #' @references Bass, E. (2023). chromConverter: Chromatographic File Converter. http://doi.org/10.5281/zenodo.6792521.
 #' 
 #' @author Thomas Warburton and Ethan Bass
 #' 
-read_ch <- function(path, format_out = c("matrix", "data.frame"),
-                    data_format = c("wide", "long"),
-                    read_metadata = TRUE,
-                    metadata_format = c("chromconverter", "raw")) {
+read_ch <- function(path, 
+                    format_out = c("data.frame", "matrix", "df", "data", "mat", "m"),
+                    data_format = c("long", "wide")) {
   
-  # Set default to long data.frame
-  format_out <- match.arg(format_out, c("data.frame", "matrix"))
-  data_format <- match.arg(data_format, c("long", "wide"))
-  metadata_format <- match.arg(metadata_format, c("chromconverter", "raw"))
+  # Map abbreviations to full names
+  format_out_map <- c("data.frame" = "data.frame", "df" = "data.frame", "data" = "data.frame",
+                      "matrix" = "matrix", "mat" = "matrix", "m" = "matrix")
+  data_format_map <- c("long" = "long", "wide" = "wide")
+  
+  # Match and map arguments
+  format_out <- match.arg(format_out)
+  format_out <- format_out_map[format_out]
+  
+  data_format <- match.arg(data_format)
+  data_format <- data_format_map[data_format]
   
   f <- file(path, "rb")
   on.exit(close(f))
@@ -53,7 +56,7 @@ read_ch <- function(path, format_out = c("matrix", "data.frame"),
     seek(f, 348)
     filetype <- paste(readBin(f, "character", n = 2), collapse = "")
     if (filetype == "OL") {
-      bytes = "8b"
+      bytes <- "8b"
     } else if (filetype == "GC") {
       seek(f, offsets$software)
       n <- get_nchar(f)
@@ -81,10 +84,8 @@ read_ch <- function(path, format_out = c("matrix", "data.frame"),
   seek(f, where = 282, origin = "start")
   
   if (version %in% c("8", "30", "130")) {
-    xmin <- as.double(readBin(f, "integer", n = 1, size = 4, signed = TRUE,
-                              endian = "big")) / 60000
-    xmax <- as.double(readBin(f, "integer", n = 1, size = 4, signed = TRUE,
-                              endian = "big")) / 60000
+    xmin <- as.double(readBin(f, "integer", n = 1, size = 4, signed = TRUE, endian = "big")) / 60000
+    xmax <- as.double(readBin(f, "integer", n = 1, size = 4, signed = TRUE, endian = "big")) / 60000
   } else {
     xmin <- readBin(f, "numeric", n = 1, endian = "big", size = 4) / 60000
     xmax <- readBin(f, "numeric", n = 1, endian = "big", size = 4) / 60000
@@ -109,31 +110,6 @@ read_ch <- function(path, format_out = c("matrix", "data.frame"),
   
   if (format_out == "matrix") {
     data <- as.matrix(data)
-  }
-  
-  if (read_metadata) {
-    meta_slots <- switch(version,
-                         "8" = 10, "81" = 10, "30" = 13, "130" = 14,
-                         "179_4b" = 10, "179_8b" = 10, "181" = 10)
-    
-    meta <- lapply(offsets[seq_len(meta_slots)], function(offset) {
-      seek(f, where = offset, origin = "start")
-      n <- get_nchar(f)
-      if (version == "30") {
-        readBin(f, what = "character")
-      } else {
-        cc_collapse(readBin(f, "character", n = n))
-      }
-    })
-    
-    metadata_from_file <- try(read_chemstation_metadata(path), silent = TRUE)
-    if (!inherits(metadata_from_file, "try-error")) {
-      meta <- c(meta, metadata_from_file)
-    }
-    
-    datetime_regex <- "(\\d{2}-[A-Za-z]{3}-\\d{2}, \\d{2}:\\d{2}:\\d{2})|(\\d{2}/\\d{2}/\\d{4} \\d{1,2}:\\d{2}:\\d{2} (?:AM|PM)?)"
-    meta$date <- regmatches(meta$date, gregexpr(datetime_regex, meta$date))[[1]]
-    data <- attach_metadata(data, meta)
   }
   
   return(data)
