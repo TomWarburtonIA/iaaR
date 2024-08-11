@@ -5,3 +5,5 @@
 .Rbuildignore
 /inst/doc/
 .Rproj.user
+read_ch.R
+read_ch.Rd
