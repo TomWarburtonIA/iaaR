@@ -8,18 +8,27 @@
 #' calibration curve contains outliers, it probably needs to be run again).
 #'
 #' @param df A data frame with numeric columns representing peak areas.
+#' 
 #' @param limit_method Character string specifying the type of limit to calculate:
 #'        "detection", "quant" or "both".
+#'        
 #' @param concs Optional vector of concentrations used in the calibration curve.
 #'        Must be provided if 'concs_in_df' is FALSE.
+#'        
 #' @param concs_in_df Logical indicating whether concentrations are included in df.
+#' 
 #' @param concs_col_position Position of the concentration column in df if 'concs_in_df'
 #'        is TRUE. Must be either "first", "last", or "none".
+#'        
 #' @param df_concs Optional data frame with concentrations corresponding to each species
 #'        in df. Must be of equal size to df.
+#'        
 #' @param zero_remove Logical indicating whether to replace zeros with NA in df.
+#' 
 #' @return A data frame with the LOD/LOQ calculated for each column in df.
+#' 
 #' @export
+#' 
 instrument_limits <- function(df,
                               limit_method,
                               concs = NULL,

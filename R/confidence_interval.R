@@ -13,19 +13,25 @@
 #' can be found in DOI: 10.1177/2515245920911881.
 #'
 #' @param data A numeric vector containing the data for which the confidence interval is calculated.
+#' 
 #' @param conf_level A numeric value specifying the confidence level for the interval (default is 0.95).
+#' 
 #' @param method A character string specifying the method to use for calculating the confidence interval.
 #'        Choose between "regular" (default) and "bootstrapped".
+#'        
 #' @param bootstrap_samples An integer specifying the number of bootstrap replicates to use when
 #'        method = "bootstrapped" (default is 1000).
+#'        
 #' @return A data frame containing the number of samples, standard deviation, standard error, mean,
 #'         and the lower and upper bounds of the confidence interval.
+#'         
 #' @examples
 #' library(iaaR)
 #'
 #' data <- c(5.1, 4.9, 5.0, 5.1, 5.2)
 #' confidence_interval(data, method = "regular")
 #' confidence_interval(data, method = "bootstrapped", bootstrap_samples = 1000)
+#' 
 #' @examples
 #' library(iaaR)
 #' library(dplyr)
@@ -37,7 +43,9 @@
 #' df_ci <- df_long %>%
 #'   group_by(variable) %>%
 #'   reframe(confidence_intervals(value, method = "regular", conf_level = 0.95))
+#'   
 #' @export
+#' 
 confidence_interval <- function(data, conf_level = 0.95, method = "regular", bootstrap_samples = NULL) {
   # Ensure data is a numeric vector
   if (!is.numeric(data))

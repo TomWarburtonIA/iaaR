@@ -8,10 +8,15 @@
 #' and can have disastrous consequences.
 #'
 #' @param df A data frame with numeric columns.
+#' 
 #' @param z_upper Numeric value for upper threshold. Default is 3.5.
+#' 
 #' @param z_lower Numeric value for lower threshold. Default is -3.5.
+#' 
 #' @param return_tidy Logical indicating whether to remove modified Z-score columns from the returned data frame. Default is TRUE.
+#' 
 #' @return A data frame with values replaced based on thresholds, optionally excluding modified Z-score columns.
+#' 
 #' @export
 z_filter <- function(df, z_upper = 3.5, z_lower = -3.5, return_tidy = TRUE) {
 
