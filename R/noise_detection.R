@@ -1,9 +1,10 @@
-#' Detect Noise Regions and Subtle Peaks in Chromatographic Data
+#' Detect Noise Regions and Manage Chromatographic Data
 #'
-#' This function identifies areas of noise and subtle peaks in chromatographic data 
-#' based on retention time and intensity. It can automatically detect relevant columns 
-#' based on common naming conventions or the user can specify their own column names 
-#' for retention time and intensity. Non-noise regions are replaced with `NA`.
+#' This function identifies areas of noise in chromatographic data based on retention 
+#' time and intensity. It offers an option to either keep the noise regions (and 
+#' replace non-noise regions with `NA`) or remove the noise regions (and keep 
+#' non-noise regions). Non-noise regions can be replaced with `NA` or removed 
+#' from the data frame depending on the specified option.
 #'
 #' @param df A data frame containing chromatographic data with retention time 
 #'   and intensity columns. The function will attempt to identify the columns 
@@ -20,19 +21,25 @@
 #' @param min_noise_duration Minimum number of consecutive points to consider 
 #'   as a noise region. Default is 3. Reducing this value helps in detecting shorter
 #'   noise bursts.
+#' @param keep_noise Logical. If `TRUE`, the function replaces non-noise values 
+#'   with `NA`. If `FALSE`, the function removes noise regions from the data frame 
+#'   entirely and keeps only non-noise regions. Default is `TRUE`.
 #' @return A data frame with the same structure as the input `df`, but with 
-#'   non-noise values in the intensity column replaced with `NA`.
+#'   either non-noise values or noise values replaced with `NA` based 
+#'   on the `keep_noise` parameter.
 #' @examples
 #' df <- data.frame(rt = c(1, 2, 3, 4, 5, 6, 7, 8, 9, 10),
 #'                  signal = c(2, 3, 2, 2, 10, 50, 2, 2, 2, 2))
-#' detect_noise(df, smoothing_window = 3, noise_threshold = 1, min_noise_duration = 2)
+#' detect_noise(df, smoothing_window = 3, noise_threshold = 1, min_noise_duration = 2, keep_noise = TRUE)
+#' detect_noise(df, smoothing_window = 3, noise_threshold = 1, min_noise_duration = 2, keep_noise = FALSE)
 #' @export
 detect_noise <- function(df, 
                          rt_col_name = NULL, 
                          intensity_col_name = NULL,
                          smoothing_window = 5, 
                          noise_threshold = 2, 
-                         min_noise_duration = 3) {
+                         min_noise_duration = 3,
+                         keep_noise = TRUE) {
   
   # Possible column names for retention time and intensity
   rt_columns <- c("retention_time", "rt", "RT", "R_T", "r-t", "R-T")
@@ -87,8 +94,13 @@ detect_noise <- function(df,
     noise_logical[group] <- TRUE
   }
   
-  # Replace non-noise values with NA in the intensity column
-  df[[intensity_col_name]] <- ifelse(noise_logical, intensity, NA)
+  if (keep_noise) {
+    # Replace non-noise values with NA in the intensity column
+    df[[intensity_col_name]] <- ifelse(noise_logical, intensity, NA)
+  } else {
+    # Remove noise regions from the data frame
+    df <- df[!noise_logical, ]
+  }
   
   return(df)
 }
