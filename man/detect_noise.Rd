@@ -2,7 +2,7 @@
 % Please edit documentation in R/noise_detection.R
 \name{detect_noise}
 \alias{detect_noise}
-\title{Detect Noise Regions and Subtle Peaks in Chromatographic Data}
+\title{Detect Noise Regions and Manage Chromatographic Data}
 \usage{
 detect_noise(
   df,
@@ -10,7 +10,8 @@ detect_noise(
   intensity_col_name = NULL,
   smoothing_window = 5,
   noise_threshold = 2,
-  min_noise_duration = 3
+  min_noise_duration = 3,
+  keep_noise = TRUE
 )
 }
 \arguments{
@@ -34,19 +35,26 @@ makes the function more sensitive.}
 \item{min_noise_duration}{Minimum number of consecutive points to consider
 as a noise region. Default is 3. Reducing this value helps in detecting shorter
 noise bursts.}
+
+\item{keep_noise}{Logical. If \code{TRUE}, the function replaces non-noise values
+with \code{NA}. If \code{FALSE}, the function removes noise regions from the data frame
+entirely and keeps only non-noise regions. Default is \code{TRUE}.}
 }
 \value{
 A data frame with the same structure as the input \code{df}, but with
-non-noise values in the intensity column replaced with \code{NA}.
+either non-noise values or noise values replaced with \code{NA} based
+on the \code{keep_noise} parameter.
 }
 \description{
-This function identifies areas of noise and subtle peaks in chromatographic data
-based on retention time and intensity. It can automatically detect relevant columns
-based on common naming conventions or the user can specify their own column names
-for retention time and intensity. Non-noise regions are replaced with \code{NA}.
+This function identifies areas of noise in chromatographic data based on retention
+time and intensity. It offers an option to either keep the noise regions (and
+replace non-noise regions with \code{NA}) or remove the noise regions (and keep
+non-noise regions). Non-noise regions can be replaced with \code{NA} or removed
+from the data frame depending on the specified option.
 }
 \examples{
 df <- data.frame(rt = c(1, 2, 3, 4, 5, 6, 7, 8, 9, 10),
                  signal = c(2, 3, 2, 2, 10, 50, 2, 2, 2, 2))
-detect_noise(df, smoothing_window = 3, noise_threshold = 1, min_noise_duration = 2)
+detect_noise(df, smoothing_window = 3, noise_threshold = 1, min_noise_duration = 2, keep_noise = TRUE)
+detect_noise(df, smoothing_window = 3, noise_threshold = 1, min_noise_duration = 2, keep_noise = FALSE)
 }

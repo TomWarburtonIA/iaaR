@@ -10,8 +10,9 @@ Upon installing this package and attaching, tidyverse will additionally be insta
   - Calculate Modified Z-scores with `calculate_mod_z`
   - Calculate confidence intervals with `confidence_interval`
   
-- Instrumental analysis
+- Sample analysis
   - Calculate instrument limits (LOD/LOQ) with `instrument_limits`
+  - Detect noise regions with `detect_noise`
 
 ## Installation
 You can install the development version of this package from GitHub using the `devtools` package:

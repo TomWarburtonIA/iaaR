@@ -30,7 +30,7 @@
             message("The 'tidyverse' package has not been attached. Some functionalities may not be available.")
           }
         }, 
-        error = function(e) {
+        error = function(e) { 
           message("Error installing 'tidyverse': ", e$message)
           message("Please install 'tidyverse' manually to use this package.")
         })
