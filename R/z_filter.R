@@ -17,6 +17,8 @@
 #' 
 #' @return A data frame with values replaced based on thresholds, optionally excluding modified Z-score columns.
 #' 
+#' @author Thomas Warburton
+#' 
 #' @export
 z_filter <- function(df, z_upper = 3.5, z_lower = -3.5, return_tidy = TRUE) {
 

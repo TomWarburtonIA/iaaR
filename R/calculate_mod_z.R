@@ -7,6 +7,8 @@
 #' be transformed using kernel density estimation (KDE) to apply smoothing before 
 #' calculating modified Z-scores.
 #'
+#' @author Thomas Warburton
+#' 
 #' @param df A data frame with columns to be processed.
 #' 
 #' @param non_numeric Either a vector of column names or indices that are considered non-numeric,

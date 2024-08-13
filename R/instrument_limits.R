@@ -7,6 +7,8 @@
 #' are more for either non-parametric regressions or those with outliers, and if your
 #' calibration curve contains outliers, it probably needs to be run again).
 #'
+#' @author Thomas Warburton
+#' 
 #' @param df A data frame with numeric columns representing peak areas.
 #' 
 #' @param limit_method Character string specifying the type of limit to calculate:

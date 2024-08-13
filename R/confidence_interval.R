@@ -12,6 +12,8 @@
 #' using `set.seed(123)`. More information on percentile bootstrapping confidence intervals
 #' can be found in DOI: 10.1177/2515245920911881.
 #'
+#' @author Thomas Warburton
+#' 
 #' @param data A numeric vector containing the data for which the confidence interval is calculated.
 #' 
 #' @param conf_level A numeric value specifying the confidence level for the interval (default is 0.95).

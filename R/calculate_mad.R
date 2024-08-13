@@ -1,5 +1,7 @@
 #' Compute Median Absolute Deviation (MAD)
 #'
+#' @author Thomas Warburton
+#' 
 #' @param x A numeric vector.
 #' 
 #' @return A numeric value representing the MAD.

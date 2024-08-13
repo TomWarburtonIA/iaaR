@@ -6,6 +6,8 @@
 #' non-noise regions). Non-noise regions can be replaced with `NA` or removed 
 #' from the data frame depending on the specified option.
 #'
+#' @author Thomas Warburton
+#' 
 #' @param df A data frame containing chromatographic data with retention time 
 #'   and intensity columns. The function will attempt to identify the columns 
 #'   automatically based on typical names if not specified by the user.
@@ -32,6 +34,7 @@
 #'                  signal = c(2, 3, 2, 2, 10, 50, 2, 2, 2, 2))
 #' detect_noise(df, smoothing_window = 3, noise_threshold = 1, min_noise_duration = 2, keep_noise = TRUE)
 #' detect_noise(df, smoothing_window = 3, noise_threshold = 1, min_noise_duration = 2, keep_noise = FALSE)
+#' 
 #' @export
 detect_noise <- function(df, 
                          rt_col_name = NULL, 
