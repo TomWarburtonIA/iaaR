@@ -26,3 +26,6 @@ a way that allows you to do more robust stats if you transform by logarithm.
 Don't filter just because you want 'good' p-values as this isn't ethical
 and can have disastrous consequences.
 }
+\author{
+Thomas Warburton
+}

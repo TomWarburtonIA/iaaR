@@ -59,3 +59,6 @@ df_ci <- df_long \%>\%
   reframe(confidence_intervals(value, method = "regular", conf_level = 0.95))
   
 }
+\author{
+Thomas Warburton
+}

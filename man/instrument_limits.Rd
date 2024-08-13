@@ -44,3 +44,6 @@ Pearson's R. Doesn't allow for Spearman's Rho / Kendall's Tau (these  methods
 are more for either non-parametric regressions or those with outliers, and if your
 calibration curve contains outliers, it probably needs to be run again).
 }
+\author{
+Thomas Warburton
+}

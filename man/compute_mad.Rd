@@ -15,3 +15,6 @@ A numeric value representing the MAD.
 \description{
 Compute Median Absolute Deviation (MAD)
 }
+\author{
+Thomas Warburton
+}

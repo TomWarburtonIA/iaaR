@@ -34,3 +34,6 @@ as these areas of densities can skew modified Z-scores. Multi-modal data can fir
 be transformed using kernel density estimation (KDE) to apply smoothing before
 calculating modified Z-scores.
 }
+\author{
+Thomas Warburton
+}
