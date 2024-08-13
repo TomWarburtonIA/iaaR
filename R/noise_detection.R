@@ -107,9 +107,10 @@ detect_noise <- function(df,
     # Replace non-noise values with NA in the intensity column
     df[[intensity_col_name]] <- ifelse(noise_logical, intensity, NA)
   } else {
-    # Remove noise regions from the data frame
-    df <- df[!noise_logical, , drop = FALSE]
+    # Keep only non-noise rows in the data frame
+    df[[intensity_col_name]] <- ifelse(!noise_logical, intensity, NA)
   }
   
   return(df)
 }
+
