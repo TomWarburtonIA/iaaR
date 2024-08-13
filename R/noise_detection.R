@@ -1,10 +1,9 @@
 #' Detect Noise Regions and Manage Chromatographic Data
 #'
-#' This function identifies areas of noise in chromatographic data based on retention 
-#' time and intensity. It offers an option to either keep the noise regions (and 
+#' For the identification of areas of noise in chromatographic data based on 
+#' retention time and intensity. It can either keep the noise regions (and 
 #' replace non-noise regions with `NA`) or remove the noise regions (and keep 
-#' non-noise regions). Non-noise regions can be replaced with `NA` or removed 
-#' from the data frame depending on the specified option.
+#' non-noise regions). 
 #'
 #' @author Thomas Warburton
 #' 
@@ -16,12 +15,12 @@
 #' @param intensity_col_name Optional. A string specifying the column name for intensity.
 #'   If not provided, the function will attempt to detect it automatically.
 #' @param smoothing_window An integer specifying the window size for smoothing 
-#'   the intensity data. Default is 5. Reducing this size increases sensitivity.
+#'   the intensity data. Default is 10. Reducing this size increases sensitivity.
 #' @param noise_threshold A numeric value specifying the threshold below which 
-#'   the smoothed intensity is considered noise. Default is 2. Lowering this value
+#'   the smoothed intensity is considered noise. Default is 5. Lowering this value
 #'   makes the function more sensitive.
 #' @param min_noise_duration Minimum number of consecutive points to consider 
-#'   as a noise region. Default is 3. Reducing this value helps in detecting shorter
+#'   as a noise region. Default is 5. Reducing this value helps in detecting shorter
 #'   noise bursts.
 #' @param keep_noise Logical. If `TRUE`, the function replaces non-noise values 
 #'   with `NA`. If `FALSE`, the function removes noise regions from the data frame 
@@ -39,31 +38,32 @@
 detect_noise <- function(df, 
                          rt_col_name = NULL, 
                          intensity_col_name = NULL,
-                         smoothing_window = 5, 
-                         noise_threshold = 2, 
-                         min_noise_duration = 3,
+                         smoothing_window = 10, 
+                         noise_threshold = 5, 
+                         min_noise_duration = 5,
                          keep_noise = TRUE) {
   
   # Possible column names for retention time and intensity
   rt_columns <- c("retention_time", "rt", "RT", "R_T", "r-t", "R-T")
   intensity_columns <- c("intensity", "Intensity", "signal", "Signal")
   
+  # Helper function to detect column names
+  detect_column <- function(col_names, possible_names) {
+    matched_cols <- names(df)[sapply(names(df), function(col) tolower(col) %in% tolower(possible_names))]
+    if (length(matched_cols) != 1) {
+      stop("Could not find a unique column for ", paste(possible_names, collapse = ", "), " in the data frame.")
+    }
+    return(matched_cols)
+  }
+  
   # Determine the retention time column
   if (is.null(rt_col_name)) {
-    rt_col <- names(df)[sapply(names(df), function(col) tolower(col) %in% tolower(rt_columns))]
-    if (length(rt_col) != 1) {
-      stop("Could not find a unique retention time column in the data frame.")
-    }
-    rt_col_name <- rt_col
+    rt_col_name <- detect_column(names(df), rt_columns)
   }
   
   # Determine the intensity column
   if (is.null(intensity_col_name)) {
-    intensity_col <- names(df)[sapply(names(df), function(col) tolower(col) %in% tolower(intensity_columns))]
-    if (length(intensity_col) != 1) {
-      stop("Could not find a unique intensity column in the data frame.")
-    }
-    intensity_col_name <- intensity_col
+    intensity_col_name <- detect_column(names(df), intensity_columns)
   }
   
   # Extract the relevant data
@@ -102,7 +102,7 @@ detect_noise <- function(df,
     df[[intensity_col_name]] <- ifelse(noise_logical, intensity, NA)
   } else {
     # Remove noise regions from the data frame
-    df <- df[!noise_logical, ]
+    df <- df[!noise_logical, , drop = FALSE]
   }
   
   return(df)
