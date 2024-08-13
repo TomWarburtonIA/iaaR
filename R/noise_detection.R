@@ -3,7 +3,13 @@
 #' For the identification of areas of noise in chromatographic data based on 
 #' retention time and intensity. It can either keep the noise regions (and 
 #' replace non-noise regions with `NA`) or remove the noise regions (and keep 
-#' non-noise regions). 
+#' non-noise regions). As with any type of noise detection, there are obvious
+#' possibilities non-noise data will be retained if you wish to isolate noise-
+#' data only, and vice versa. As such you will need to adjust the parameters
+#' accordingly, on the understanding you will likely need to compromise in 
+#' order to isolate either noise or non-noise. If you wish to run calculations
+#' on the noise data, you will need to apply rolling windows on your data.
+#' Running `detect_noise` twice could be needed for data with large peaks. 
 #'
 #' @author Thomas Warburton
 #' 
@@ -32,7 +38,7 @@
 #' df <- data.frame(rt = c(1, 2, 3, 4, 5, 6, 7, 8, 9, 10),
 #'                  signal = c(2, 3, 2, 2, 10, 50, 2, 2, 2, 2))
 #' detect_noise(df, smoothing_window = 3, noise_threshold = 1, min_noise_duration = 2, keep_noise = TRUE)
-#' detect_noise(df, smoothing_window = 3, noise_threshold = 1, min_noise_duration = 2, keep_noise = FALSE)
+#' detect_noise(df, keep_noise = FALSE)
 #' 
 #' @export
 detect_noise <- function(df, 

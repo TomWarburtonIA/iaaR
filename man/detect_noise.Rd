@@ -8,9 +8,9 @@ detect_noise(
   df,
   rt_col_name = NULL,
   intensity_col_name = NULL,
-  smoothing_window = 5,
-  noise_threshold = 2,
-  min_noise_duration = 3,
+  smoothing_window = 10,
+  noise_threshold = 5,
+  min_noise_duration = 5,
   keep_noise = TRUE
 )
 }
@@ -26,14 +26,14 @@ If not provided, the function will attempt to detect it automatically.}
 If not provided, the function will attempt to detect it automatically.}
 
 \item{smoothing_window}{An integer specifying the window size for smoothing
-the intensity data. Default is 5. Reducing this size increases sensitivity.}
+the intensity data. Default is 10. Reducing this size increases sensitivity.}
 
 \item{noise_threshold}{A numeric value specifying the threshold below which
-the smoothed intensity is considered noise. Default is 2. Lowering this value
+the smoothed intensity is considered noise. Default is 5. Lowering this value
 makes the function more sensitive.}
 
 \item{min_noise_duration}{Minimum number of consecutive points to consider
-as a noise region. Default is 3. Reducing this value helps in detecting shorter
+as a noise region. Default is 5. Reducing this value helps in detecting shorter
 noise bursts.}
 
 \item{keep_noise}{Logical. If \code{TRUE}, the function replaces non-noise values
@@ -46,15 +46,24 @@ either non-noise values or noise values replaced with \code{NA} based
 on the \code{keep_noise} parameter.
 }
 \description{
-This function identifies areas of noise in chromatographic data based on retention
-time and intensity. It offers an option to either keep the noise regions (and
+For the identification of areas of noise in chromatographic data based on
+retention time and intensity. It can either keep the noise regions (and
 replace non-noise regions with \code{NA}) or remove the noise regions (and keep
-non-noise regions). Non-noise regions can be replaced with \code{NA} or removed
-from the data frame depending on the specified option.
+non-noise regions). As with any type of noise detection, there are obvious
+possibilities non-noise data will be retained if you wish to isolate noise-
+data only, and vice versa. As such you will need to adjust the parameters
+accordingly, on the understanding you will likely need to compromise in
+order to isolate either noise or non-noise. If you wish to run calculations
+on the noise data, you will need to apply rolling windows on your data.
+Running \code{detect_noise} twice could be needed for data with large peaks.
 }
 \examples{
 df <- data.frame(rt = c(1, 2, 3, 4, 5, 6, 7, 8, 9, 10),
                  signal = c(2, 3, 2, 2, 10, 50, 2, 2, 2, 2))
 detect_noise(df, smoothing_window = 3, noise_threshold = 1, min_noise_duration = 2, keep_noise = TRUE)
-detect_noise(df, smoothing_window = 3, noise_threshold = 1, min_noise_duration = 2, keep_noise = FALSE)
+detect_noise(df, keep_noise = FALSE)
+
+}
+\author{
+Thomas Warburton
 }
