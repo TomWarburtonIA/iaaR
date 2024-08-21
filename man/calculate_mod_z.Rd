@@ -14,15 +14,20 @@ calculate_mod_z(
 \arguments{
 \item{df}{A data frame with columns to be processed.}
 
-\item{non_numeric}{Either a vector of column names or indices that are considered non-numeric, or the string "NONE" to indicate no columns should be excluded.}
+\item{non_numeric}{Either a vector of column names or indices that are considered non-numeric,
+or the string "NONE" to indicate no columns should be excluded.}
 
-\item{return_type}{Character value indicating how to return the modified Z-scores. Options are "add_columns" or "separate_df". Default is "add_columns".}
+\item{return_type}{Character value indicating how to return the modified Z-scores. Options are
+"add_columns" or "separate_df". Default is "add_columns".}
 
-\item{zero_remove}{Logical indicating whether to replace zeros with NA before Z-Score calculation. Default is TRUE.}
+\item{zero_remove}{Logical indicating whether to replace zeros with NA before Z-Score calculation.
+Default is TRUE.}
 }
 \value{
-A data frame with modified Z-scores added to the original data frame or a separate data frame with only the modified Z-scores.
+A data frame with modified Z-scores added to the original data frame or a separate data
+frame with only the modified Z-scores.
 }
 \description{
-Modified Z-scores are calculated using the Median Absolute Deviation (MAD), aiming to handle non-parametric distributions within data.
+Modified Z-scores are calculated using the Median Absolute Deviation (MAD), aiming to handle
+non-parametric distributions within data.
 }
