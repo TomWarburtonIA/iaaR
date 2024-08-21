@@ -1,27 +1,17 @@
 #' Replace values with NA based on Modified Z-Scores
 #'
-#' Be careful doing this - make sure you are being ethical with your data, and
-#' only filter with this function if you have genuinely large outliers that are
-#' skewing your data. Remember you can typically squash data together nicely in
-#' a way that allows you to do more robust stats if you transform by logarithm.
-#' Don't filter just because you want 'good' p-values as this isn't ethical
-#' and can have disastrous consequences.
+#' This function replaces values in a data frame with NA based on thresholds
+#' of modified Z-scores. It is important to ensure that filtering is done
+#' ethically and only when justified.
 #'
 #' @param df A data frame with numeric columns.
-#' 
-#' @param z_upper Numeric value for upper threshold. Default is 3.5.
-#' 
-#' @param z_lower Numeric value for lower threshold. Default is -3.5.
-#' 
+#' @param z_upper Numeric value for the upper threshold of modified Z-scores. Default is 3.5.
+#' @param z_lower Numeric value for the lower threshold of modified Z-scores. Default is -3.5.
 #' @param return_tidy Logical indicating whether to remove modified Z-score columns from the returned data frame. Default is TRUE.
-#' 
-#' @return A data frame with values replaced based on thresholds, optionally excluding modified Z-score columns.
-#' 
-#' @author Thomas Warburton
-#' 
+#' @return A data frame with outliers replaced by NA, optionally excluding modified Z-score columns.
 #' @export
 z_filter <- function(df, z_upper = 3.5, z_lower = -3.5, return_tidy = TRUE) {
-
+  
   # Function to prompt the user for confirmation
   prompt_user <- function(message, default = "N") {
     cat(message, " (Y/N): ")
@@ -29,46 +19,42 @@ z_filter <- function(df, z_upper = 3.5, z_lower = -3.5, return_tidy = TRUE) {
     if (response == "") response <- default
     return(toupper(response))
   }
-
+  
   # Ask the user for confirmation before proceeding
-  confirm <- prompt_user("You're sure you want to filter? You can transform datasets more robustly by logarithm transformation.
-Willful removal of outliers based on a computed value isn't always the right thing to do. Be sure.")
+  confirm <- prompt_user("You're about to filter data based on modified Z-scores. This can affect the integrity of your analysis. Proceed? (Y/N)")
   if (confirm != "Y") {
     cat("Operation cancelled. The data have not been filtered.\n")
     return(df)  # Return the original data frame without modifications
   }
-
-  # Convert column names to a consistent format for processing
-  original_colnames <- names(df)
-  df_colnames <- make.names(original_colnames, unique = TRUE)
-  colnames(df) <- df_colnames
-
-  # Initialize a list to keep track of which columns are modified Z-score columns
-  mod_z_cols <- grep("^modified_z_", df_colnames, value = TRUE)
-
-  # Process each numeric column that is not a Modified Z-Score column
-  for (col_name in original_colnames) {
-    if (is.numeric(df[[col_name]]) && !grepl("^modified_z_", col_name)) {
-      mod_z_col <- paste0("modified_z_", col_name)
-
-      if (mod_z_col %in% df_colnames) {
-        df[[col_name]] <- ifelse(df[[mod_z_col]] > z_upper |
-                                   df[[mod_z_col]] < z_lower,
-                                 NA,
-                                 df[[col_name]])
-      } else {
-        warning(paste("Modified Z-score column", mod_z_col, "not found for", col_name))
-      }
+  
+  # Identify modified Z-score columns
+  mod_z_cols <- grep("^modified_z_", names(df), value = TRUE)
+  print(paste("Modified Z-score columns found:", paste(mod_z_cols, collapse = ", ")))
+  
+  # Process each numeric column that has a corresponding Modified Z-Score column
+  for (mod_z_col in mod_z_cols) {
+    # Extract the original column name by removing the prefix
+    original_col_name <- sub("^modified_z_", "", mod_z_col)
+    
+    if (original_col_name %in% names(df)) {
+      cat("Processing column:", original_col_name, "\n")
+      
+      # Replace outliers with NA based on Z-score thresholds
+      df[[original_col_name]] <- ifelse(
+        !is.na(df[[mod_z_col]]) & is.finite(df[[mod_z_col]]) &
+          (df[[mod_z_col]] > z_upper | df[[mod_z_col]] < z_lower),
+        NA,
+        df[[original_col_name]]
+      )
+    } else {
+      warning(paste("Original column not found for modified Z-score column", mod_z_col))
     }
   }
-
-  # Restore original column names
-  colnames(df) <- original_colnames
-
+  
   # Optionally remove Modified Z-Score columns
   if (return_tidy) {
-    df <- df[ , !colnames(df) %in% mod_z_cols]
+    df <- df[ , !names(df) %in% mod_z_cols]
   }
-
+  
   return(df)
 }

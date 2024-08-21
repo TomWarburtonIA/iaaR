@@ -9,23 +9,17 @@ z_filter(df, z_upper = 3.5, z_lower = -3.5, return_tidy = TRUE)
 \arguments{
 \item{df}{A data frame with numeric columns.}
 
-\item{z_upper}{Numeric value for upper threshold. Default is 3.5.}
+\item{z_upper}{Numeric value for the upper threshold of modified Z-scores. Default is 3.5.}
 
-\item{z_lower}{Numeric value for lower threshold. Default is -3.5.}
+\item{z_lower}{Numeric value for the lower threshold of modified Z-scores. Default is -3.5.}
 
 \item{return_tidy}{Logical indicating whether to remove modified Z-score columns from the returned data frame. Default is TRUE.}
 }
 \value{
-A data frame with values replaced based on thresholds, optionally excluding modified Z-score columns.
+A data frame with outliers replaced by NA, optionally excluding modified Z-score columns.
 }
 \description{
-Be careful doing this - make sure you are being ethical with your data, and
-only filter with this function if you have genuinely large outliers that are
-skewing your data. Remember you can typically squash data together nicely in
-a way that allows you to do more robust stats if you transform by logarithm.
-Don't filter just because you want 'good' p-values as this isn't ethical
-and can have disastrous consequences.
-}
-\author{
-Thomas Warburton
+This function replaces values in a data frame with NA based on thresholds
+of modified Z-scores. It is important to ensure that filtering is done
+ethically and only when justified.
 }
