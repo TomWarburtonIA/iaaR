@@ -1,34 +1,29 @@
 #' Compute Modified Z-Scores for numeric columns and add them as new columns or return them separately.
-#' 
-#' Modified Z-scores are calculated using the Median Absolute Deviation (MAD), insodoing 
-#' attempting to account for non-parametric distributions within data. Please exercise 
-#' caution for use in multi-modal data (data with several areas of higher densities), 
-#' as these areas of densities can skew modified Z-scores. Multi-modal data can first 
-#' be transformed using kernel density estimation (KDE) to apply smoothing before 
-#' calculating modified Z-scores.
 #'
-#' @author Thomas Warburton
-#' 
+#' Modified Z-scores are calculated using the Median Absolute Deviation (MAD), aiming to handle 
+#' non-parametric distributions within data. 
+#'
 #' @param df A data frame with columns to be processed.
-#' 
-#' @param non_numeric Either a vector of column names or indices that are considered non-numeric,
-#'                    or the string "NONE" to indicate no columns should be excluded.
-#'                    
-#' @param return_type Character value indicating how to return the modified Z-scores.
-#'   Options are "add_columns" to add modified Z-scores as new columns at the end of the original data frame, or
-#'   "separate_df" to return a separate data frame with only the modified Z-scores. Default is "add_columns".
-#'   
-#' @param zero_remove Logical indicating whether to replace zeros with NA before Z-Score calculation. Default is TRUE.
-#' 
-#' @return A data frame with modified Z-scores added to the original data frame or a separate data frame with only the modified Z-scores.
-#' 
+#' @param non_numeric Either a vector of column names or indices that are considered non-numeric, 
+#' or the string "NONE" to indicate no columns should be excluded.
+#' @param return_type Character value indicating how to return the modified Z-scores. Options are 
+#' "add_columns" or "separate_df". Default is "add_columns".
+#' @param zero_remove Logical indicating whether to replace zeros with NA before Z-Score calculation. 
+#' Default is TRUE.
+#' @return A data frame with modified Z-scores added to the original data frame or a separate data 
+#' frame with only the modified Z-scores.
 #' @export
-#' 
-calculate_mod_z <- function(df, non_numeric, return_type = "add_columns", zero_remove = TRUE) {
+calculate_mod_z <- function(df, non_numeric = "NONE", return_type = "add_columns", zero_remove = TRUE) {
   
   # Helper function to calculate the median absolute deviation (MAD)
   calculate_mad <- function(x) {
-    median(abs(x - median(x, na.rm = TRUE)), na.rm = TRUE)
+    x <- na.omit(x)
+    if (length(x) == 0) {
+      warning("Input vector contains only NA values or is empty. MAD will be NA.")
+      return(NA)
+    }
+    median_abs_deviation <- median(abs(x - median(x, na.rm = TRUE)), na.rm = TRUE)
+    return(median_abs_deviation)
   }
   
   # Validate 'non_numeric' parameter
@@ -64,14 +59,12 @@ calculate_mod_z <- function(df, non_numeric, return_type = "add_columns", zero_r
     column_data <- df[[col_name]]
     
     if (zero_remove) {
-      # Replace zeros with NA before calculations
       column_data[column_data == 0] <- NA
     }
     
     median_value <- median(column_data, na.rm = TRUE)
     mad_value <- calculate_mad(column_data)
     
-    # Handle cases where MAD is NA or column contains only NAs
     if (is.na(mad_value) || mad_value == 0 || all(is.na(column_data))) {
       warning(paste("MAD is zero or column contains all NAs for column", col_name, "- modified Z-scores will be NA."))
       mod_z <- rep(NA, nrow(df))
@@ -79,31 +72,23 @@ calculate_mod_z <- function(df, non_numeric, return_type = "add_columns", zero_r
       mod_z <- 0.6745 * (column_data - median_value) / mad_value
     }
     
-    # Add the modified Z-scores to the list with updated column name
+    # Add the modified Z-scores to the list with the original column name prefixed
     mod_z_list[[paste0("modified_z_", col_name)]] <- mod_z
   }
   
   # Combine modified Z-scores with the original data frame
   if (return_type == "separate_df") {
     # Create a separate data frame with only the modified Z-scores
-    mod_z_df <- as.data.frame(mod_z_list)
-    
-    # Include non-numeric columns in the separate data frame
+    mod_z_df <- as.data.frame(mod_z_list, check.names = FALSE)
     non_numeric_df <- df[ , non_numeric_cols, drop = FALSE]
     result_df <- cbind(non_numeric_df, mod_z_df)
     
     return(result_df)
   } else if (return_type == "add_columns") {
     # Add modified Z-scores as new columns to the original data frame
-    df_with_mod_z <- df
+    df_with_mod_z <- cbind(df, as.data.frame(mod_z_list, check.names = FALSE))
     
-    # Combine original data frame with the modified Z-scores
-    df_with_mod_z <- cbind(df_with_mod_z, as.data.frame(mod_z_list))
-    
-    # Preserve original column order and add modified Z-scores at the end
-    result_df <- df_with_mod_z
-    
-    return(result_df)
+    return(df_with_mod_z)
   } else {
     stop("Invalid 'return_type' parameter. Choose either 'add_columns' or 'separate_df'.")
   }
