@@ -41,6 +41,10 @@ instrument_limits <- function(df,
   {
 
   # Validate inputs
+  if (!is.null(conc_col_position)) {
+    concs_in_df=TRUE
+  }
+  
   if (!limit_method %in% c("detection", "quant", "both")) {
     stop("Invalid value for 'limit_method'. Must be 'detection', 'quant', or 'both'.")
   }
@@ -50,6 +54,7 @@ instrument_limits <- function(df,
   if (is.null(concs) && !concs_in_df && is.null(df_concs)) {
     stop("If 'concs_in_df' is FALSE, 'concs' must be specified.")
   }
+  
 
   # Remove zeros if specified
   if (zero_remove) {
