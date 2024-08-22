@@ -5,5 +5,3 @@
 .Rbuildignore
 /inst/doc/
 .Rproj.user
-read_wacl_ch.R
-read_wacl_ch.Rd
