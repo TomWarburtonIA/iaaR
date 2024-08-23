@@ -69,7 +69,7 @@ read_wacl_ch <- function(path, format_out = "data.frame", data_format = "long") 
   return(data)
 }
 
-# Minimal required decoding function for version 179
+# Decoding function for version 179 .ch files
 decode_double_array_8byte <- function(file, offset) {
   seek(file, 0, 'end')
   fsize <- seek(file, NA, "current")
