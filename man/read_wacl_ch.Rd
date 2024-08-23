@@ -39,6 +39,4 @@ Bass, E. (2023). chromConverter: Chromatographic File Converter. http://doi.org/
 }
 \author{
 Thomas Warburton and Ethan Bass
-
-#' @export
 }

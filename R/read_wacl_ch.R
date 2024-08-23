@@ -28,7 +28,7 @@
 #' 
 #' @author Thomas Warburton and Ethan Bass
 #' 
-#' #' @export
+#' @export
 read_wacl_ch <- function(path, format_out = "data.frame", data_format = "long") {
   # Open the file for binary reading
   f <- file(path, "rb")
