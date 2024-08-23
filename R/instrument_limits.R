@@ -44,7 +44,6 @@ instrument_limits <- function(df,
   if (!is.null(conc_col_position)) {
     concs_in_df=TRUE
   }
-  
   if (!limit_method %in% c("detection", "quant", "both")) {
     stop("Invalid value for 'limit_method'. Must be 'detection', 'quant', or 'both'.")
   }
@@ -63,14 +62,24 @@ instrument_limits <- function(df,
 
   # Handle concentration column if included in df
   if (concs_in_df) {
-    if (conc_col_position == "first") {
-      concs <- df[, 1]
-      df <- df[, -1]
-    } else if (conc_col_position == "last") {
-      concs <- df[, ncol(df)]
-      df <- df[, -ncol(df)]
+    if (is.character(conc_col_position)) {
+      if (conc_col_position == "first") {
+        concs <- df[, 1]
+        df <- df[, -1]
+      } else if (conc_col_position == "last") {
+        concs <- df[, ncol(df)]
+        df <- df[, -ncol(df)]
+      } else if (conc_col_position == "none") {
+        concs <- NULL  # Or any appropriate action for 'none'
+      } else {
+        stop("Invalid value for 'conc_col_position'. Must be 'first', 'last', 'none', or a vector.")
+      }
+    } else if (is.numeric(conc_col_position) && all(conc_col_position %in% seq_len(ncol(df)))) {
+      # Handle vector assignment
+      concs <- df[, conc_col_position]
+      df <- df[, -conc_col_position]
     } else {
-      stop("Invalid value for 'concs_col_position'. Must be 'first', 'last', or 'none'.")
+      stop("Invalid value for 'conc_col_position'. Must be 'first', 'last', 'none', or a valid vector of column indices.")
     }
   }
 
