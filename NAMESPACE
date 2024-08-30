@@ -3,6 +3,7 @@
 export(calculate_mod_z)
 export(compute_mad)
 export(confidence_interval)
+export(date_diff)
 export(detect_noise)
 export(dilution_volumes)
 export(instrument_limits)
