@@ -13,7 +13,7 @@
 #' @param date_format        The date format. Must be identical across 'initial_date' and
 #'                      'final_date'. Use Y, M and D in quotes to express the date
 #'                      format (e.g "%Y-%m-%d" or "%d-%m-%Y"). Taken as 
-#'                      "YYYY-MM-DD" as default. Can also use 
+#'                      "YYYY-MM-DD" as default.
 #' @return              A numeric value giving the difference between the two dates.
 #' @examples
 #' initial_date <- "2023-01-01"
