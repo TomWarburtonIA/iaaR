@@ -15,19 +15,23 @@
           }
           message("The 'tidyverse' package has been installed successfully.")
           
-          # Prompt to load 'tidyverse'
-          attach_tidyverse <- utils::askYesNo("Do you want to attach the 'tidyverse' package now?")
-          if (attach_tidyverse) {
-            tryCatch({
-              library(tidyverse)
-              message("The 'tidyverse' package has been attached successfully.")
-            }, 
-            error = function(e) {
-              message("Error loading 'tidyverse': ", e$message)
-              message("Please install 'tidyverse' manually to use this package.")
-            })
+          # Prompt to load 'tidyverse' only if it is not already attached
+          if (!"tidyverse" %in% (.packages())) {
+            attach_tidyverse <- utils::askYesNo("Do you want to attach the 'tidyverse' package now?")
+            if (attach_tidyverse) {
+              tryCatch({
+                library(tidyverse)
+                message("The 'tidyverse' package has been attached successfully.")
+              }, 
+              error = function(e) {
+                message("Error loading 'tidyverse': ", e$message)
+                message("Please install 'tidyverse' manually to use this package.")
+              })
+            } else {
+              message("The 'tidyverse' package has not been attached. Some functionalities may not be available.")
+            }
           } else {
-            message("The 'tidyverse' package has not been attached. Some functionalities may not be available.")
+            message("'tidyverse' is already attached.")
           }
         }, 
         error = function(e) { 
@@ -40,12 +44,10 @@
     } else {
       message("The 'tidyverse' package is already installed.")
       
-      # Prompt to load 'tidyverse'
-      attach_tidyverse <- utils::askYesNo("Do you want to attach the 'tidyverse' package now?")
-      if (attach_tidyverse) {
-        if ("tidyverse" %in% (.packages())) {
-          message("'tidyverse' is already attached.")
-        } else {
+      # Check if 'tidyverse' is already attached before prompting
+      if (!"tidyverse" %in% (.packages())) {
+        attach_tidyverse <- utils::askYesNo("Do you want to attach the 'tidyverse' package now?")
+        if (attach_tidyverse) {
           tryCatch({
             library(tidyverse)
             message("The 'tidyverse' package has been attached successfully.")
@@ -54,9 +56,11 @@
             message("Error loading 'tidyverse': ", e$message)
             message("Ensure that 'tidyverse' is installed correctly.")
           })
+        } else {
+          message("The 'tidyverse' package has not been attached. Some functionalities may not be available.")
         }
       } else {
-        message("The 'tidyverse' package has not been attached. Some functionalities may not be available.")
+        message("'tidyverse' is already attached.")
       }
     }
   }
