@@ -3,16 +3,24 @@
 #' Modified Z-scores are calculated using the Median Absolute Deviation (MAD), aiming to handle 
 #' non-parametric distributions within data. 
 #'
+#' @author Thomas Warburton
+#'
 #' @param df A data frame with columns to be processed.
+#' 
 #' @param non_numeric Either a vector of column names or indices that are considered non-numeric, 
 #' or the string "NONE" to indicate no columns should be excluded.
+#' 
 #' @param return_type Character value indicating how to return the modified Z-scores. Options are 
 #' "add_columns" or "separate_df". Default is "add_columns".
+#' 
 #' @param zero_remove Logical indicating whether to replace zeros with NA before Z-Score calculation. 
 #' Default is TRUE.
+#' 
 #' @return A data frame with modified Z-scores added to the original data frame or a separate data 
 #' frame with only the modified Z-scores.
+#' 
 #' @export
+#' 
 calculate_mod_z <- function(df, non_numeric = "NONE", return_type = "add_columns", zero_remove = TRUE) {
   
   # Helper function to calculate the median absolute deviation (MAD)

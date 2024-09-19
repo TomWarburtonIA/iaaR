@@ -3,13 +3,21 @@
 #' This function replaces values in a data frame with NA based on thresholds
 #' of modified Z-scores. It is important to ensure that filtering is done
 #' ethically and only when justified.
+#' 
+#' @author Thomas Warburton
 #'
 #' @param df A data frame with numeric columns.
+#' 
 #' @param z_upper Numeric value for the upper threshold of modified Z-scores. Default is 3.5.
+#' 
 #' @param z_lower Numeric value for the lower threshold of modified Z-scores. Default is -3.5.
+#' 
 #' @param return_tidy Logical indicating whether to remove modified Z-score columns from the returned data frame. Default is TRUE.
+#' 
 #' @return A data frame with outliers replaced by NA, optionally excluding modified Z-score columns.
+#' 
 #' @export
+#' 
 z_filter <- function(df, z_upper = 3.5, z_lower = -3.5, return_tidy = TRUE) {
   
   # Function to prompt the user for confirmation

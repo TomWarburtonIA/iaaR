@@ -23,3 +23,6 @@ This function replaces values in a data frame with NA based on thresholds
 of modified Z-scores. It is important to ensure that filtering is done
 ethically and only when justified.
 }
+\author{
+Thomas Warburton
+}

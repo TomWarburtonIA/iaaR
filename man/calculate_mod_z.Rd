@@ -31,3 +31,6 @@ frame with only the modified Z-scores.
 Modified Z-scores are calculated using the Median Absolute Deviation (MAD), aiming to handle
 non-parametric distributions within data.
 }
+\author{
+Thomas Warburton
+}
