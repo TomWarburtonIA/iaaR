@@ -49,6 +49,8 @@
 #' 
 #' print(df_expanded)
 #' 
+#' @export
+
 
 increment <- function(emission_rate, volume, aer, volume_step = NULL, aer_step = NULL) {
   
