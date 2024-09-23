@@ -1,10 +1,10 @@
 Package: iaaR
-Title: Things that help to keep my code tidy
+Title: Functions to help with indoor air analysis
 Version: 0.1
 Authors@R: 
     person("Thomas", "Warburton", , "tw1580@york.ac.uk", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0001-5120-6226"))
-Description: I've combined the functions that were scattered around my code into one package. Its mainly just so I can keep it all in one place, but if you find it helpful also then that is great! Let me know if you find anything weird on your journies through this!
+Description: Indoor air analysis can be quite complex! Aside from the chemistry involved, target gases and sampling rigs are often required, as well as complex data visualisation. These functions won't make everything easy, but will hopefully at least help with some aspects of it! If you find any issues or bugs, then please let me know by raising a question on GitHub or by emailing me at tw1580@york.ac.uk.
 License: GPL (>= 3)
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
