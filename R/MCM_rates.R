@@ -35,7 +35,7 @@ mcm_rates <- function(species_name) {
   
   # Helper function to convert mhchem string to R equation
   convert_mhchem_to_R <- function(mhchem_string) {
-    # Remove the leading arrow (->)
+    # Convert different mhchem sections to be usable in R
     cleaned_string <- sub("^->", "", mhchem_string)
     cleaned_string <- gsub("\\\\times", "*", cleaned_string)
     cleaned_string <- gsub("\\\\exp", "exp", cleaned_string)
