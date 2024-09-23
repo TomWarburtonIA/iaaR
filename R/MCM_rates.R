@@ -18,7 +18,7 @@
 #' 
 #' @export
 
-MCM_rates <- function(species_name) {
+mcm_rates <- function(species_name) {
   
   # Load valid species names from the package data
   valid_species_names <- get("valid_species_names", envir = asNamespace("iaaR"))
