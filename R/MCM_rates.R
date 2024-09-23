@@ -40,7 +40,7 @@ MCM_rates <- function(species_name) {
     cleaned_string <- gsub("\\\\times", "*", cleaned_string)
     cleaned_string <- gsub("\\\\exp", "exp", cleaned_string)
     cleaned_string <- gsub("\\\\frac", "", cleaned_string)
-    cleaned_string <- gsub("\\\\T", "/T", cleaned_string)
+    cleaned_string <- gsub("\\T", "/T", cleaned_string)
     cleaned_string <- gsub("\\{", "", cleaned_string)
     cleaned_string <- gsub("\\}", "", cleaned_string)
     cleaned_string <- gsub("\\[", "", cleaned_string)
