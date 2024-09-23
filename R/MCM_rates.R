@@ -5,7 +5,11 @@
 #' This function will extract the primary reaction rates for the reaction of
 #' the gas-phase reactant with an oxidant. This function does not include
 #' precursor reaction rates (rates for the formation of the species in 
-#' question). Essentially, this function is a data scraper.
+#' question). Essentially, this function is a data scraper. However, this is
+#' only intended for primary VOCs, as with secondary VOCs with several precursor
+#' reactions, the rates often turn very complex - in this case, you are probably 
+#' better off downloading a FACSIMILE (.fac) file directly from the website 
+#' (mcm.york.ac.uk).
 #' 
 #' @author Thomas Warburton
 #' 
