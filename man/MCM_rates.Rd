@@ -21,7 +21,7 @@ pollutants to the final oxidation products of carbon dioxide and water.
 This function will extract the primary reaction rates for the reaction of
 the gas-phase reactant with an oxidant. This function does not include
 precursor reaction rates (rates for the formation of the species in
-question).
+question). Essentially, this function is a data scraper.
 }
 \author{
 Thomas Warburton
