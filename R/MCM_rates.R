@@ -108,7 +108,7 @@ mcm_rates <- function(species_name) {
           }
         }
       } else {
-        # Check for normal rates and extract them
+        # Check for non-generic rates and extract them
         match <- regmatches(rate_line, regexpr("<a>(.*?)</a>", rate_line, perl = TRUE))
         rate <- if (length(match) > 0) gsub("<a>|</a>", "", match) else "complex rate, refer to MCM"
       }
@@ -116,10 +116,10 @@ mcm_rates <- function(species_name) {
       # Append the cleaned data to the lists
       reactants_list <- c(reactants_list, reactants)
       
-      # Clean the rate string using the helper function
+      # Clean the rate string using the helper function (at end of function)
       cleaned_rate <- convert_mhchem_to_R(rate)
       
-      # Append the constant if it exists
+      # Append the generic rate constant if it exists
       if (!is.na(constant)) {
         cleaned_rate <- paste0(cleaned_rate, "*", constant)  # Append constant to the cleaned rate
       }
@@ -150,7 +150,7 @@ mcm_rates <- function(species_name) {
   return(reactions)
 }
 
-# Keep your helper functions as is
+# Helper function to clean up the rate string
 convert_mhchem_to_R <- function(mhchem_string) {
   # Start with the original string
   cleaned_string <- mhchem_string
@@ -177,9 +177,4 @@ convert_mhchem_to_R <- function(mhchem_string) {
   
   # Return the cleaned string, trimming whitespace if necessary
   return(trimws(cleaned_string))
-}
-
-# Keep is_valid_species function as is
-is_valid_species <- function(name) {
-  return(name %in% valid_species_names)
 }
