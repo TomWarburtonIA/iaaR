@@ -20,7 +20,8 @@
 #' mechanism as used in the MCM.
 #' 
 #' @return A data frame with the names of each oxidant, the rate of reaction
-#' between the primary species with the oxidant, and the oxidation product.
+#' between the primary species with the oxidant stored as a string, and the 
+#' oxidation product.
 #' 
 #' @export
 
