@@ -9,7 +9,9 @@
 #' only intended for primary VOCs, as with secondary VOCs with several precursor
 #' reactions, the rates often turn very complex - in this case, you are probably 
 #' better off downloading a FACSIMILE (.fac) file directly from the website 
-#' (mcm.york.ac.uk).
+#' (mcm.york.ac.uk). This function will not attempt to resolve any rates which
+#' make reference to complex rates or photolysis parameters - in this case, you
+#' will be better served referring directly to the MCM.
 #' 
 #' @author Thomas Warburton
 #' 
@@ -37,36 +39,20 @@ mcm_rates <- function(species_name) {
     stop("Invalid species name. Please choose from the names within /data/valid_species_names.rda")
   }
   
-  # Helper function to convert mhchem string to R equation
-  convert_mhchem_to_R <- function(mhchem_string) {
-    # Convert different mhchem sections to be usable in R
-    cleaned_string <- sub("^->", "", mhchem_string)
-    cleaned_string <- gsub("\\\\times", "*", cleaned_string)
-    cleaned_string <- gsub("\\\\exp", "exp", cleaned_string)
-    cleaned_string <- gsub("\\\\frac", "", cleaned_string)
-    cleaned_string <- gsub("\\T", "/T", cleaned_string)
-    cleaned_string <- gsub("\\{", "", cleaned_string)
-    cleaned_string <- gsub("\\}", "", cleaned_string)
-    cleaned_string <- gsub("\\[", "", cleaned_string)
-    cleaned_string <- gsub("\\]", "", cleaned_string)
-    
-    # Return the final cleaned string
-    return(trimws(cleaned_string))
-  }
+  # Generic rates vector
+  generic_rates <- get("generic_rates", envir = asNamespace("iaaR"))
   
-  # Read the HTML content directly from the URL
+  # Fetch the HTML content from the generic rates page
+  generic_html <- readLines("https://mcm.york.ac.uk/MCM/rates/generic", warn = FALSE)
+  
+  # Read the HTML content directly from the species page
   html_content <- readLines(paste0("https://mcm.york.ac.uk/MCM/species/", species_name))
   
   # Initialize vectors to store results
   reactants_list <- c()
   rates_list <- c()
   products_list <- c()
-  
-  # Flags to capture multi-line content
-  in_reaction <- FALSE
-  rate <- ""
-  reactants <- ""
-  products <- ""
+  constants_list <- c()  # To store constants for generic rates
   
   # Loop through lines to find relevant information
   for (i in seq_along(html_content)) {
@@ -78,54 +64,74 @@ mcm_rates <- function(species_name) {
     
     # Check if a new reaction block begins (indicated by "rxn-rate")
     if (grepl("rxn-rate", html_content[i])) {
-      in_reaction <- TRUE
-      rate <- html_content[i]  # Start capturing the rate line
-    }
-    
-    # If we're inside a reaction block, capture reactants, products, and rate
-    if (in_reaction) {
+      rate_line <- html_content[i]  # Start capturing the rate line
+      
       # Extract reactants (4 lines before the current line)
-      if (i - 4 > 0) {
-        reactants <- html_content[i - 4]
-      } else {
-        reactants <- NA
-      }
+      reactants <- if (i - 4 > 0) html_content[i - 4] else NA
       
       # Extract products (4 lines after the current line)
-      if (i + 4 <= length(html_content)) {
-        products <- html_content[i + 4]
-      } else {
-        products <- NA
-      }
+      products <- if (i + 4 <= length(html_content)) html_content[i + 4] else NA
       
-      # Extract LaTeX portion of the rate string (\\ce{...})
-      match <- regmatches(rate, regexpr("<a>(.*?)</a>", rate, perl = TRUE))
+      # Initialize the rate variable
+      rate <- NA
+      constant <- NA  # Initialize constant variable
       
-      # Clean the result to get only the content inside the <a> tags
-      if (length(match) > 0) {
-        cleaned_content <- gsub("<a>|</a>", "", match)
+      # Check if the rate contains a generic rate variable
+      matched_generic_rates <- na.omit(sapply(generic_rates, function(rate_name) {
+        if (grepl(paste0("\\b", rate_name, "\\b"), rate_line)) {  # Exact match with word boundaries
+          return(rate_name)
+        } else {
+          return(NA)
+        }
+      }))
+      
+      if (length(matched_generic_rates) > 0) {
+        # If a generic rate is found, keep only the name
+        rate <- matched_generic_rates[1]  # Only the first matched generic rate
         
-        # Extract only the part after \ce
-        rate <- sub(".*\\\\ce\\{(.*)\\}.*", "\\1", cleaned_content)
+        # Extract the constant from the rate line using exact match
+        const_match <- regmatches(rate_line, regexpr(paste0("\\{", rate, "\\}\\*(\\d*\\.?\\d+)"), rate_line))
+        if (length(const_match) > 0) {
+          constant <- sub(paste0(".*\\{", rate, "\\}\\*(\\d*\\.?\\d+).*"), "\\1", const_match)
+        }
         
-        # Convert the mhchem string to R equation
-        rate <- convert_mhchem_to_R(rate)
+        # Extract the actual rate from the line following the generic rate line
+        line_number <- which(grepl(rate, generic_html))
+        if (length(line_number) > 0) {
+          if (line_number[1] + 1 <= length(generic_html)) {
+            actual_rate_line <- generic_html[line_number[1] + 1]
+            actual_rate_match <- regmatches(actual_rate_line, regexpr(">([^<]+)<", actual_rate_line))
+            if (length(actual_rate_match) > 0) {
+              actual_rate <- gsub("[<>]", "", actual_rate_match)  # Clean and store the actual rate
+              rate <- actual_rate  # Replace the generic rate with the actual rate in the rates list
+            }
+          }
+        }
       } else {
-        rate <- NA  # No match found
+        # Check for normal rates and extract them
+        match <- regmatches(rate_line, regexpr("<a>(.*?)</a>", rate_line, perl = TRUE))
+        rate <- if (length(match) > 0) gsub("<a>|</a>", "", match) else "complex rate, refer to MCM"
       }
       
       # Append the cleaned data to the lists
       reactants_list <- c(reactants_list, reactants)
-      rates_list <- c(rates_list, rate)
-      products_list <- c(products_list, products)
       
-      # Reset the flag to stop capturing after one reaction
-      in_reaction <- FALSE
+      # Clean the rate string using the helper function
+      cleaned_rate <- convert_mhchem_to_R(rate)
+      
+      # Append the constant if it exists
+      if (!is.na(constant)) {
+        cleaned_rate <- paste0(cleaned_rate, "*", constant)  # Append constant to the cleaned rate
+      }
+      
+      rates_list <- c(rates_list, cleaned_rate)  # Store cleaned rate
+      products_list <- c(products_list, products)
+      constants_list <- c(constants_list, constant)  # Append the constant
     }
   }
   
   # Find the maximum length
-  max_length <- max(length(reactants_list), length(rates_list), length(products_list))
+  max_length <- max(length(reactants_list), length(rates_list), length(products_list), length(constants_list))
   
   # Fill shorter lists with NA
   reactants_list <- c(reactants_list, rep(NA, max_length - length(reactants_list)))
@@ -134,13 +140,46 @@ mcm_rates <- function(species_name) {
   
   # Combine the extracted data into a data frame
   reactions <- data.frame(
-    Oxidant = reactants_list,
+    Reactant = reactants_list,
     Rate = rates_list,
     Product = products_list,
     stringsAsFactors = FALSE
   )
   
-  # Return the extracted data
+  # Return the cleaned data
   return(reactions)
 }
 
+# Keep your helper functions as is
+convert_mhchem_to_R <- function(mhchem_string) {
+  # Start with the original string
+  cleaned_string <- mhchem_string
+  
+  # Remove the leading '\(' and '\ce{'
+  cleaned_string <- gsub("^\\\\\\(", "", cleaned_string)  # Remove leading '\('
+  cleaned_string <- gsub("^\\\\ce\\{", "", cleaned_string) # Remove leading '\ce{'
+  
+  # Remove the trailing '\)'
+  cleaned_string <- gsub("\\\\)$", "", cleaned_string)  # Remove trailing '\)'
+  
+  # Remove any other unwanted LaTeX symbols
+  cleaned_string <- gsub("\\->", "", cleaned_string)        # Remove the arrow
+  cleaned_string <- gsub("\\\\times", "*", cleaned_string)  # Replace \times with *
+  cleaned_string <- gsub("\\\\exp", "exp", cleaned_string)  # Keep exp as is
+  cleaned_string <- gsub("\\\\frac", "", cleaned_string)    # Remove \frac if needed
+  cleaned_string <- gsub("T", "/T", cleaned_string)          # Convert T to /T
+  cleaned_string <- gsub("\\{", "", cleaned_string)          # Remove {
+  cleaned_string <- gsub("\\}", "", cleaned_string)          # Remove }
+  
+  # Clean any additional unwanted characters
+  cleaned_string <- gsub("\\[", "", cleaned_string)          # Remove [
+  cleaned_string <- gsub("\\]", "", cleaned_string)          # Remove ]
+  
+  # Return the cleaned string, trimming whitespace if necessary
+  return(trimws(cleaned_string))
+}
+
+# Keep is_valid_species function as is
+is_valid_species <- function(name) {
+  return(name %in% valid_species_names)
+}

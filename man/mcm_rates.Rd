@@ -25,7 +25,9 @@ question). Essentially, this function is a data scraper. However, this is
 only intended for primary VOCs, as with secondary VOCs with several precursor
 reactions, the rates often turn very complex - in this case, you are probably
 better off downloading a FACSIMILE (.fac) file directly from the website
-(mcm.york.ac.uk).
+(mcm.york.ac.uk). This function will not attempt to resolve any rates which
+make reference to complex rates or photolysis parameters - in this case, you
+will be better served referring directly to the MCM.
 }
 \author{
 Thomas Warburton
