@@ -30,6 +30,21 @@ better off downloading a FACSIMILE (.fac) file directly from the website
 make reference to complex rates or photolysis parameters - in this case, you
 will be better served referring directly to the MCM.
 }
+\examples{
+#This is example code for how to use the `mcm_rates` function to scrape reaction
+rates for alpha-pinene, and then use the scraped rates mathematically in R.
+
+library(iaaR)
+
+df <- mcm_rates("APINENE") 
+
+df_rates <- df["Rate"]
+
+T <- 293
+
+df_results <- data.frame(Result = sapply(df_rates$Rate, function(expr) eval(parse(text = expr))))
+
+}
 \author{
 Thomas Warburton
 }

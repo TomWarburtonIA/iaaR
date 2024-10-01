@@ -23,6 +23,20 @@
 #' between the primary species with the oxidant stored as a string, and the 
 #' oxidation product.
 #' 
+#' @examples
+#' #This is example code for how to use the `mcm_rates` function to scrape reaction
+#' rates for alpha-pinene, and then use the scraped rates mathematically in R.
+#' 
+#' library(iaaR)
+#' 
+#' df <- mcm_rates("APINENE") 
+#' 
+#' df_rates <- df["Rate"]
+#' 
+#' T <- 293
+#' 
+#' df_results <- data.frame(Result = sapply(df_rates$Rate, function(expr) eval(parse(text = expr))))
+#' 
 #' @export
 
 mcm_rates <- function(species_name) {
