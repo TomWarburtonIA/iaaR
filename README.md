@@ -13,6 +13,10 @@ Upon installing this package and attaching, tidyverse will additionally be insta
 - Sample analysis
   - Calculate instrument limits (LOD/LOQ) with `instrument_limits`
   - Detect noise regions with `detect_noise` (intended for use on chromatographic data to remove peaks, but can also be flipped to isolate peaks)
+ 
+- Practical applications
+  - Calculate pressure drops in pneumatic circular lines with `pressure_drop`
+  - Calculate tubing lengths and volumes with `tube_length` and `tube_vol`
 
 ## Installation
 You can install the development version of this package from GitHub using the `devtools` package:
