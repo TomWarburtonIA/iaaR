@@ -19,8 +19,8 @@ format (e.g "\%Y-\%m-\%d" or "\%d-\%m-\%Y"). Taken as
 "YYYY-MM-DD" as default.}
 }
 \value{
-\if{html}{\out{<div class="sourceCode">}}\preformatted{         A numeric value giving the difference between the two dates.
-}\if{html}{\out{</div>}}
+\preformatted{         A numeric value giving the difference between the two dates.
+}
 }
 \description{
 This function will find the different between two dates in number of days.
