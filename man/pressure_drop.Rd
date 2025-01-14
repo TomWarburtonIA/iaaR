@@ -11,9 +11,12 @@ pressure_drop()
 console.}
 }
 \value{
-A list containing:
+A list containing the following:
 \itemize{
 \item \code{flow_type}: The calculated flow type ('laminar' or 'turbulent').
+\item \code{flow_orientation}: Either 'horizontal' or 'vertical'.
+\item \code{flow_direction}: Whether vertical flow was 'upwards' or 'downwards'.
+Only applicable for 'vertical' flow.
 \item \code{reynolds_number}: The calculated Reynolds number.
 \item \code{pressure_drop}: The calculated pressure drop in Pascals.
 }
@@ -25,12 +28,15 @@ Reynolds number indicates the flow is in a laminar-turbulent transition
 state (taken as having a Reynolds number between 2300 and 4000), but the
 function does display warnings for Reynolds numbers that indicate this
 transition. Laminar flow is calculated using the Hagen-Poiseuille equation,
-while turbulent flow is calculated using the Darcy-Weisbach equation. The
-function prompts for all necessary parameters interactively in the console.
+while turbulent flow is calculated using the Darcy-Weisbach equation. Now
+with added vertical functionality, calculating vertical pressure gains or
+losses through calculation of wall shear stressed for both laminar and
+turbulent flow. The function prompts for all necessary parameters
+interactively in the console.
 }
 \examples{
 result <- pressure_drop()
-print(result)
+print(result$pressure_drop)
 
 }
 \author{
