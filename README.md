@@ -15,8 +15,8 @@ Upon installing this package and attaching, tidyverse will additionally be insta
   - Detect noise regions with `detect_noise` (intended for use on chromatographic data to remove peaks, but can also be flipped to isolate peaks)
   
 - Practical applications
- - Calculate the pressure drop in horizontal or vertical pipes for both turbulent or laminar flow with `pressure_drop`
- - Convert volumetric flow rate of a fluid in a pipe to mean velocity with `f2v`
+  - Calculate the pressure drop in horizontal or vertical pipes for both turbulent or laminar flow with `pressure_drop`
+  - Convert volumetric flow rate of a fluid in a pipe to mean velocity with `f2v`
 
 ## Installation
 You can install the development version of this package from GitHub using the `devtools` package:
@@ -27,4 +27,4 @@ install.packages("remotes")
 remotes::install_github("TomWarburtonIA/iaaR")
 ```
 ## Help/assistance/bugs
-If you spot any bugs or need any help with the functions here, either submit a ticket or [email me here](mailto:tom.warburton@york.ac.uk?subject=[GitHub]%iaaR).
+If you spot any bugs or need any help with the functions here, either submit a ticket or [email me here](mailto:tom.warburton@york.ac.uk?subject=[GitHub]%20iaaR).
