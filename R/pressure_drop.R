@@ -116,7 +116,7 @@ pressure_drop <- function() {
     if (reynolds_number >= 2300) {
       message("Warning: Reynolds number suggests the flow may not be laminar.")
     }
-    pressure_drop <- (8 * viscosity * velocity * length) / (pi * (diameter / 2)^4)
+    pressure_drop <- (8 * viscosity * length * ((((diameter/2)^2)*pi)*(velocity)) / (pi * ((diameter / 2)^4)))
   } else if (forcing_param == "dw" || calc_type == "turbulent") {
     # Darcy-Weisbach equation for turbulent flow
     if (reynolds_number < 4000) {
