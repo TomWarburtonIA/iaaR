@@ -81,7 +81,7 @@ pressure_drop <- function() {
     } else if (flow_direction == "downwards") {
       pressure_drop <- (((4 * height) / diameter) * wall_shear_stress) + (density * 9.81 * height)
     }
-
+    
     
     return(list(
       flow_type = flow_type,
@@ -135,4 +135,3 @@ pressure_drop <- function() {
     pressure_drop = pressure_drop
   ))
 }
-

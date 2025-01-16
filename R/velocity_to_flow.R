@@ -1,4 +1,4 @@
-#' Convert average fluid velocity (m / s) to volumetric flow rate (L / min)
+#' Convert fluid velocity (m / s) to volumetric flow rate (L / min)
 #' 
 #' A function to convert the flow rate `V` (m / s) of a fluid in a pipe of 
 #' diameter `D` (m) into a velocity `Q` (L / min). Make sure you use the 

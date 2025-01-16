@@ -10,13 +10,9 @@ tube_length(id, vol, units)
 \item{id}{A numeric giving the internal diameter (ID) of the tube being used.}
 
 \item{vol}{A numeric giving the required internal volume.}
-
-\item{units}{A character variable indicating the units being used in the
-calculation. Only used in the final tube length print.}
 }
 \value{
-A printed concatenation of the calculated tube length and the units
-expressed in the function call.
+A numeric of the calculated tube length.
 }
 \description{
 This function is intended to be used to calculate the length of tube/pipe

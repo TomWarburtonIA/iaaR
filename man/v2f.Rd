@@ -2,7 +2,7 @@
 % Please edit documentation in R/velocity_to_flow.R
 \name{v2f}
 \alias{v2f}
-\title{Convert average fluid velocity (m / s) to volumetric flow rate (L / min)}
+\title{Convert fluid velocity (m / s) to volumetric flow rate (L / min)}
 \usage{
 v2f(velocity, pipe_diameter)
 }

@@ -4,19 +4,15 @@
 \alias{tube_vol}
 \title{Calculate the internal volume in a tube of set length}
 \usage{
-tube_vol(id, length, units)
+tube_vol(id, length)
 }
 \arguments{
 \item{id}{A numeric giving the internal diameter (ID) of the tube being used.}
 
 \item{length}{A numeric giving the length of tubing being used.}
-
-\item{units}{A character variable indicating the units being used in the
-calculation. Only used in the final tube length print.}
 }
 \value{
-A printed concatenation of the calculated internal volume and the
-units expressed in the function call.
+A numeric of the calculated tube volume.
 }
 \description{
 This function is intended to be used to calculate the internal volumes of
