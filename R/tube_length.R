@@ -10,11 +10,7 @@
 #' 
 #' @param vol A numeric giving the required internal volume.
 #' 
-#' @param units A character variable indicating the units being used in the 
-#' calculation. Only used in the final tube length print.
-#' 
-#' @return A printed concatenation of the calculated tube length and the units
-#' expressed in the function call.
+#' @return A numeric of the calculated tube length.
 #' 
 #' @export
 
@@ -22,6 +18,6 @@ tube_length <- function(id, vol, units) {
   csa <- pi*(id/2)^2
   length <- vol/csa
   
-  return(paste0(length, " ", units))
+  return(length)
 }
 
