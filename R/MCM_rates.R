@@ -82,7 +82,16 @@ mcm_rates <- function(species_name) {
       rate_line <- html_content[i]  # Start capturing the rate line
       
       # Extract reactants (4 lines before the current line)
-      reactants <- if (i - 4 > 0) html_content[i - 4] else NA
+      reactants <- if (i - 4 > 0) {
+        temp_reactant <- html_content[i - 4]
+        if (temp_reactant == species_name && i - 10 > 0) {
+          html_content[i - 10]
+        } else {
+          temp_reactant
+        }
+      } else {
+        NA
+      }
       
       # Extract products (4 lines after the current line)
       products <- if (i + 4 <= length(html_content)) html_content[i + 4] else NA
