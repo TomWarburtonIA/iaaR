@@ -176,29 +176,26 @@ mcm_rates <- function(species_name) {
 
 # Helper function to clean up the rate string
 convert_mhchem_to_R <- function(mhchem_string) {
-  # Start with the original string
   cleaned_string <- mhchem_string
   
-  # Remove the leading '\(' and '\ce{'
+  # Remove leading and trailing LaTeX parts
   cleaned_string <- gsub("^\\\\\\(", "", cleaned_string)  # Remove leading '\('
   cleaned_string <- gsub("^\\\\ce\\{", "", cleaned_string) # Remove leading '\ce{'
-  
-  # Remove the trailing '\)'
   cleaned_string <- gsub("\\\\)$", "", cleaned_string)  # Remove trailing '\)'
   
-  # Remove any other unwanted LaTeX symbols
+  # Remove unwanted LaTeX symbols
   cleaned_string <- gsub("\\->", "", cleaned_string)        # Remove the arrow
   cleaned_string <- gsub("\\\\times", "*", cleaned_string)  # Replace \times with *
   cleaned_string <- gsub("\\\\exp", "exp", cleaned_string)  # Keep exp as is
-  cleaned_string <- gsub("\\\\frac", "", cleaned_string)    # Remove \frac if needed
-  cleaned_string <- gsub("T", "/T", cleaned_string)          # Convert T to /T
-  cleaned_string <- gsub("\\{", "", cleaned_string)          # Remove {
-  cleaned_string <- gsub("\\}", "", cleaned_string)          # Remove }
   
-  # Clean any additional unwanted characters
-  cleaned_string <- gsub("\\[", "", cleaned_string)          # Remove [
-  cleaned_string <- gsub("\\]", "", cleaned_string)          # Remove ]
+  # Convert \frac{a}{b} to a/b
+  cleaned_string <- gsub("\\\\frac\\{([^}]+)\\}\\{([^}]+)\\}", "\\1/\\2", cleaned_string)
   
-  # Return the cleaned string, trimming whitespace if necessary
+  # Clean remaining LaTeX symbols
+  cleaned_string <- gsub("\\{", "", cleaned_string)         # Remove '{'
+  cleaned_string <- gsub("\\}", "", cleaned_string)         # Remove '}'
+  cleaned_string <- gsub("\\[", "", cleaned_string)         # Remove '['
+  cleaned_string <- gsub("\\]", "", cleaned_string)         # Remove ']'
+  
   return(trimws(cleaned_string))
 }
