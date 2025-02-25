@@ -34,13 +34,6 @@ read_wacl_ch <- function(path, format_out = "data.frame", data_format = "long") 
   f <- file(path, "rb")
   on.exit(close(f))
   
-  # Set the offsets for version 179
-  offsets <- list(
-    scaling_factor = 4732,
-    intercept = 4724,
-    data_start = 4096
-  )
-  
   # Sample Info
   seek(f, 264, "start")
   offset <- (readBin(f, "integer", n = 1, endian = "big", size = 4) - 1) * 512
