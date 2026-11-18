@@ -2,6 +2,7 @@
 
 export(background_subtract)
 export(calculate_mod_z)
+export(choose_stat_test)
 export(compute_mad)
 export(confidence_interval)
 export(date_diff)
