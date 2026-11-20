@@ -27,7 +27,7 @@
 #' @examples
 #' library(iaaR)
 #' 
-#' convert_from_molecules(cm_cmn3 = 12913923195, temp_K = 273.15, conv_type="ugm3")
+#' convert_from_molecules(mol_cm3 = 12913923195, temp_K = 273.15, conv_type="ugm3")
 
 convert_from_molecules <- function(mol_cm3,
                                    molar_mass  = NULL,   
