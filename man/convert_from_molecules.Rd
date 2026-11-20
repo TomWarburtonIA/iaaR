@@ -36,7 +36,8 @@ convert_from_molecules(mol_cm3 = 12913923195, conv_type = "ppb")
 
 library(iaaR)
 
-convert_from_molecules(mol_cm3 = 12913923195, temp_K = 273.15, conv_type="ugm3")
+convert_from_molecules(mol_cm3 = 12913923195, temp_K = 273.15, 
+                       molar_mass = 30, conv_type = "ugm3")
 }
 \author{
 Thomas Warburton
