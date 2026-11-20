@@ -56,7 +56,7 @@ value = c(rnorm(10, mean = 5), rnorm(10, mean = 6))
 )
 df_ci <- df_long \%>\%
   group_by(variable) \%>\%
-  reframe(confidence_intervals(value, method = "regular", conf_level = 0.95))
+  reframe(confidence_interval(value, method = "regular", conf_level = 0.95))
   
 }
 \author{
